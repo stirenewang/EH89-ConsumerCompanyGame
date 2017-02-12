@@ -37,4 +37,5 @@ for i in range(pathNum):
 
 print(path) 
 # get a path for the consumer to find. (give them a start node. 
-# They are to try to find the end node)
+# They are to try to find the end node. We know it is possible
+#  because we have a path)
