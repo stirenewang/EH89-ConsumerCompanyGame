@@ -9,10 +9,10 @@ var svg = d3.select('body')
   .attr('width', width)
   .attr('height', height);
 
-var p = 5
+var p = 25;
 
 var n = 2 * p,
-    m = 2 * p 
+    m = 2 * p ;
 
 // set up initial nodes and links
 //  - nodes are known by 'id', not by index in array.
@@ -40,24 +40,35 @@ var lastNodeId = n-1
 function createLink(nodes, k){
   // console.log(nodelist)
   var linklist = [];
-  var existing = [];
-  for (var i=0; i < k; i++){
+  var existing = {};
+  for (var f = 0; f < n; f++) {
+    existing[f] = [];
+  }
+  for (var i=0; i < k; i++) {
     idx1 = Math.floor(Math.random() * (n-1));
     idx2 = Math.floor(Math.random() * (n-1));
-    if (idx2 == idx1){
+    while (idx2 == idx1) {
       idx2 = Math.floor(Math.random() * (n-1));
     }
-    
-    console.log(i, "1", nodes[idx1]);
-    console.log(i, "2", nodes[idx2]);
+    while (existing[idx1].includes(idx2) || existing[idx2].includes(idx1)) {
+      console.log("existing:", existing);
+      console.log("testing:", idx1, idx2);
+      idx1 = Math.floor(Math.random() * (n-1));
+      idx2 = Math.floor(Math.random() * (n-1));
+      while (idx2 == idx1) {
+        idx2 = Math.floor(Math.random() * (n-1));
+      }
+    }
+    existing[idx1].push(idx2);
+    console.log(i, idx1, idx2);
     entry = {source: nodes[idx1], target: nodes[idx2], left: false, right: false}
     linklist.push(entry);
   }
 
   return linklist;
 }
+// Create m random links
 var links = createLink(nodes, m);
-console.log("tester: ", links);
 
 // init D3 force layout
 var force = d3.layout.force()
