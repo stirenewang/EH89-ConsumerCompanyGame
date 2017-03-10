@@ -51,8 +51,8 @@ function createLink(nodes, k){
       idx2 = Math.floor(Math.random() * (n-1));
     }
     while (existing[idx1].includes(idx2) || existing[idx2].includes(idx1)) {
-      console.log("existing:", existing);
-      console.log("testing:", idx1, idx2);
+      // console.log("existing:", existing);
+      // console.log("testing:", idx1, idx2);
       idx1 = Math.floor(Math.random() * (n-1));
       idx2 = Math.floor(Math.random() * (n-1));
       while (idx2 == idx1) {
@@ -60,7 +60,7 @@ function createLink(nodes, k){
       }
     }
     existing[idx1].push(idx2);
-    console.log(i, idx1, idx2);
+    // console.log(i, idx1, idx2);
     entry = {source: nodes[idx1], target: nodes[idx2], left: false, right: false}
     linklist.push(entry);
   }
@@ -212,8 +212,14 @@ function restart() {
 
       // select node
       mousedown_node = d;
-      if(mousedown_node === selected_node) selected_node = null;
-      else selected_node = mousedown_node;
+      if(mousedown_node === selected_node) {
+        selected_node = null;
+      }
+      else{
+        selected_node = mousedown_node;
+        // toggle node reflexivity
+        selected_node.reflexive = true;
+     }
       selected_link = null;
 
       // reposition drag line

@@ -213,7 +213,11 @@ function restart() {
       // select node
       mousedown_node = d;
       if(mousedown_node === selected_node) selected_node = null;
-      else selected_node = mousedown_node;
+      else {
+        selected_node = mousedown_node;
+        // toggle node reflexivity
+        selected_node.reflexive = true;
+      }
       selected_link = null;
 
       // reposition drag line
