@@ -12,7 +12,7 @@ var svg = d3.select('body')
 var p = 25;
 
 var n = 2 * p,
-    m = 2 * p ;
+    m = 2 * p + 10 ;
 
 // set up initial nodes and links
 //  - nodes are known by 'id', not by index in array.
@@ -21,7 +21,7 @@ var n = 2 * p,
 
 // PUSH THE NODES
 nodes = [
-  {id: 0, reflexive: true}
+  {id: 0, reflexive: false}
 ]
 for(var i = 1; i < n ;i++) {
   nodes.push({id: i, reflexive: false})
@@ -33,10 +33,10 @@ var lastNodeId = n-1
 //     {source: nodes[1], target: nodes[2], left: false, right: true }
 //   ];
 
-  // var links = [
-  //   {source: nodes[0], target: nodes[Math.floor(Math.random() * n)], left: false, right: true },
-  //   {source: nodes[1], target: nodes[2], left: false, right: true }
-  // ];
+// var links = [
+//   {source: nodes[0], target: nodes[Math.floor(Math.random() * n)], left: false, right: true },
+//   {source: nodes[1], target: nodes[2], left: false, right: true }
+// ];
 function createLink(nodes, k){
   // console.log(nodelist)
   var linklist = [];
@@ -44,6 +44,7 @@ function createLink(nodes, k){
   for (var f = 0; f < n; f++) {
     existing[f] = [];
   }
+
   for (var i=0; i < k; i++) {
     idx1 = Math.floor(Math.random() * (n-1));
     idx2 = Math.floor(Math.random() * (n-1));
@@ -69,6 +70,8 @@ function createLink(nodes, k){
 }
 // Create m random links
 var links = createLink(nodes, m);
+
+console.log("source", links[0].source.id, "target", links[0].target.id);
 
 // init D3 force layout
 var force = d3.layout.force()
@@ -252,7 +255,7 @@ function restart() {
         source = mousedown_node;
         target = mouseup_node;
         direction = 'right';
-      } else {
+      } else { 
         source = mouseup_node;
         target = mousedown_node;
         direction = 'left';
@@ -262,6 +265,7 @@ function restart() {
       link = links.filter(function(l) {
         return (l.source === source && l.target === target);
       })[0];
+
 
       if(link) {
         link[direction] = true;
@@ -295,42 +299,15 @@ function restart() {
 function mousedown() {
   // prevent I-bar on drag
   //d3.event.preventDefault();
-
   // because :active only works in WebKit?
   svg.classed('active', true);
-
   if(d3.event.ctrlKey || mousedown_node || mousedown_link) return;
-
-  // insert new node at point
-  // var point = d3.mouse(this),
-  //     node = {id: ++lastNodeId, reflexive: false};
-  // node.x = point[0];
-  // node.y = point[1];
-  // nodes.push(node);
-
-  restart();
-}
-
-function mousemove() {
-  if(!mousedown_node) return;
-
-  // update drag line
-  drag_line.attr('d', 'M' + mousedown_node.x + ',' + mousedown_node.y + 'L' + d3.mouse(this)[0] + ',' + d3.mouse(this)[1]);
-
   restart();
 }
 
 function mouseup() {
-  if(mousedown_node) {
-    // hide drag line
-    drag_line
-      .classed('hidden', true)
-      .style('marker-end', '');
-  }
-
   // because :active only works in WebKit?
   svg.classed('active', false);
-
   // clear mouse event vars
   resetMouseVars();
 }
@@ -339,6 +316,7 @@ function spliceLinksForNode(node) {
   var toSplice = links.filter(function(l) {
     return (l.source === node || l.target === node);
   });
+  console.log("spliceLinksForNode");
   toSplice.map(function(l) {
     links.splice(links.indexOf(l), 1);
   });
@@ -349,6 +327,5 @@ var lastKeyDown = -1;
 
 // app starts here
 svg.on('mousedown', mousedown)
-  .on('mousemove', mousemove)
   .on('mouseup', mouseup);
 restart();
