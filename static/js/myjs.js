@@ -296,11 +296,11 @@ function mousedown() {
   if(d3.event.ctrlKey || mousedown_node || mousedown_link) return;
 
   // insert new node at point
-  var point = d3.mouse(this),
-      node = {id: ++lastNodeId, reflexive: false};
-  node.x = point[0];
-  node.y = point[1];
-  nodes.push(node);
+  // var point = d3.mouse(this),
+  //     node = {id: ++lastNodeId, reflexive: false};
+  // node.x = point[0];
+  // node.y = point[1];
+  // nodes.push(node);
 
   restart();
 }
