@@ -71,7 +71,62 @@ function createLink(nodes, k){
 // Create m random links
 var links = createLink(nodes, m);
 
-console.log("source", links[0].source.id, "target", links[0].target.id);
+// create a path for the game that is p/2 length
+var pathlength = Math.floor(p / 2);
+function getPath(plength, links){
+  var traveled = {}, path = [];
+
+  for (var f = 0; f < n; f++) {
+    traveled[f] = [];
+  }
+  // first node
+  curr = links[0];
+  console.log("source", curr.source.id, "target", curr.target.id);
+  traveled[curr.source.id].push(curr.target.id);
+  traveled[curr.target.id].push(curr.source.id);
+  path.push(curr);
+
+  startnode = curr.target.id;
+  while (plength > 0) {
+    // search through links list for a next node
+    found = false;
+    for (var i = 0; i < links.length; i++) {
+      search = links[i];
+      if (search.source.id == startnode || search.target.id == startnode) {
+        if (search.source.id == startnode) {
+          temp = search.target.id;
+        } else {
+          temp = search.source.id;
+        }
+
+        if (traveled[search.source.id].includes(search.target.id) == false) {
+          nextNode = search;
+          nextfound = temp;
+          found = true;
+        } else {
+          nextnotfound = temp;
+          backup = search;
+        }
+      }
+    }
+    // not found
+    if (found == false) {
+      console.log("repeat");
+      curr = backup;
+      startnode = nextnotfound;
+    } else {
+      curr = nextNode;
+      startnode = nextfound;
+    }
+    console.log("source", curr.source.id, "target", curr.target.id);
+    traveled[curr.source.id].push(curr.target.id);
+    traveled[curr.target.id].push(curr.source.id);
+    path.push(curr);
+    plength--;
+  }
+
+}
+var path = getPath(pathlength, links);
 
 // init D3 force layout
 var force = d3.layout.force()
