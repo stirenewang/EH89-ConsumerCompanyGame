@@ -233,7 +233,6 @@ var rand_path = get_path(nodes, links, pl);
 var start = get_node_by_id(rand_path[0]);
 var visited = [start];
 selected_node = start;
-console.log(websites[start.id])
 
 // Updates graph (called when needed)
 function restart() {
