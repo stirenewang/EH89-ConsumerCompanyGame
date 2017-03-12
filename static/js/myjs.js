@@ -326,6 +326,12 @@ function restart() {
   force.start();
 }
 
+// Set up text box
+var start_node = document.getElementById("start");
+var fin_node = document.getElementById("fin");
+start_node.innerHTML = websites[rand_path[0]];
+fin_node.innerHTML = websites[rand_path[1]];
+
 function mousedown() {
   svg.classed('active', true);
   if(d3.event.ctrlKey || mousedown_node || mousedown_link) return;
