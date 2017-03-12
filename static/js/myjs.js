@@ -328,8 +328,8 @@ function restart() {
 // Set up text box
 var start_node = document.getElementById("start");
 var fin_node = document.getElementById("fin");
-start_node.innerHTML = websites[rand_path[0]];
-fin_node.innerHTML = websites[rand_path[1]];
+start_node.innerHTML = 'Start at ' + websites[rand_path[0]];
+fin_node.innerHTML = 'End at ' + websites[rand_path[1]];
 
 function mousedown() {
   svg.classed('active', true);
