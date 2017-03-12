@@ -23,7 +23,11 @@ var websites = ['Google', 'Amazon', 'Facebook', 'Twitter', 'LinkedIn',
                 'Reddit', 'AOL', 'Craigslist', 'Instagram', 'Diply',
                 'Live', 'Office', 'CNN', 'Chase', 'Blogspot', 'ESPN',
                 'Twitch', 'Apple', 'Walmart', 'Caltech', 'Weather',
-                'Breitbart', 'Microsoft', 'Zillow', 'Dropbox'];
+                'Breitbart', 'Microsoft', 'Zillow', 'Dropbox', 'Asana',
+                'New Yorker', 'Asos', 'Forever 21', 'Twitch', 'BlueApron',
+                'Square', 'Uniqlo', 'Weibo', 'WeChat', 'Baidu',
+                'GitHub', 'PirateBay', 'Spotify', 'Vimeo', 'UPS', 
+                'citi', "Macy's", ];
 
 // Pushing the nodes
 nodes = [
@@ -203,6 +207,9 @@ function tick() {
   });
 }
 
+
+website_iterator = 0;
+
 // Updates graph (called when needed)
 function restart() {
   path = path.data(links);
@@ -283,7 +290,13 @@ function restart() {
       .attr('x', 0)
       .attr('y', 4)
       .attr('class', 'id')
-      .text(function(d) {return websites[Math.floor(Math.random() * (websites.length - 1))]});
+      .text(function(d) {
+        //websites[Math.floor(Math.random() * (websites.length - 1))];
+        currweb = websites[website_iterator];
+        //console.log(website_iterator, currweb);
+        website_iterator++;
+        return currweb
+      });
 
   // Remove old nodes
   circle.exit().remove();
