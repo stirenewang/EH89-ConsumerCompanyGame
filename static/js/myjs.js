@@ -13,21 +13,22 @@ var svg = d3.select('body')
 // m = number of edges
 var p = 25;
 var n = 2 * p,
-    m = 2 * p + 10;
+    m = 2 * p + 1;
 
 // Website names
+var website_iterator = 0;
 var websites = ['Google', 'Amazon', 'Facebook', 'Twitter', 'LinkedIn', 
                 'Wikipedia', 'Yahoo', 'MSN', 'Youtube', 'Yelp',
                 'Tumblr', 'eBay', 'Pinterest', 'Paypal', 'Imgur',
                 'Netflix', 'Bing', 'Hulu', 'Wikia', 'IMDb',
                 'Reddit', 'AOL', 'Craigslist', 'Instagram', 'Diply',
-                'Live', 'Office', 'CNN', 'Chase', 'Blogspot', 'ESPN',
-                'Twitch', 'Apple', 'Walmart', 'Caltech', 'Weather',
-                'Breitbart', 'Microsoft', 'Zillow', 'Dropbox', 'Asana',
-                'New Yorker', 'Asos', 'Forever 21', 'Twitch', 'BlueApron',
-                'Square', 'Uniqlo', 'Weibo', 'WeChat', 'Baidu',
-                'GitHub', 'PirateBay', 'Spotify', 'Vimeo', 'UPS', 
-                'citi', "Macy's", ];
+                'Live', 'Office', 'CNN', 'Chase', 'Blogspot',
+                'ESPN', 'Twitch', 'Apple', 'Walmart', 'Caltech',
+                'Weather', 'Breitbart', 'Microsoft', 'Zillow', 'Dropbox',
+                'Asana', 'New Yorker', 'Asos', 'Forever 21', 'Twitch',
+                'BlueApron', 'Square', 'Uniqlo', 'Weibo', 'Baidu',
+                'Baidu', 'GitHub', 'PirateBay', 'Spotify', 'Vimeo',
+                'UPS', 'PornHub', 'NBC', 'CBS', 'Disney'];
 
 // Pushing the nodes
 nodes = [
@@ -38,8 +39,8 @@ for(var i = 1; i < n; i++) {
 }
 var lastNodeId = n - 1;
 
-// Function: creates k random links on nodes
-function createLink(nodes, k){
+// Creates k random links on nodes
+function createLink(nodes, k) {
   var linklist = [];
   var existing = {};
   for (var f = 0; f < n; f++) {
@@ -76,64 +77,73 @@ function createLink(nodes, k){
 // Creating m random links
 var links = createLink(nodes, m);
 
-// Creates a path that is plength long
-function getPath(plength, links){
-  var traveled = {},
-      path = [];
+// BFS to get distance of all nodes from node
+function bfs(node, links) {
+  var visited = [];
+  var dists = [];
+  var queue = [];
 
-  for (var f = 0; f < n; f++) {
-    traveled[f] = [];
-  }
-  // first node
-  curr = links[0];
-  console.log("source", curr.source.id, "target", curr.target.id);
-  traveled[curr.source.id].push(curr.target.id);
-  traveled[curr.target.id].push(curr.source.id);
-  path.push(curr);
+  traveled = [node.id];
+  dists = [0];
+  queue.push([node.id, 0]);
 
-  startnode = curr.target.id;
-  while (plength > 0) {
-    // search through links list for a next node
-    found = false;
+  while (queue.length !== 0) {
+    var node = queue[0][0];
+    var depth = queue[0][1];
+    queue.shift();
+
     for (var i = 0; i < links.length; i++) {
-      search = links[i];
-      if (search.source.id == startnode || search.target.id == startnode) {
-        if (search.source.id == startnode) {
-          temp = search.target.id;
-        } else {
-          temp = search.source.id;
+      var search = links[i];
+      if (search.source.id === node || search.target.id === node) {
+        if (search.source.id === node) {
+          var temp = search.target.id;
+        }
+        else {
+          var temp = search.source.id;
         }
 
-        if (traveled[search.source.id].includes(search.target.id) == false) {
-          nextNode = search;
-          nextfound = temp;
-          found = true;
-        } else {
-          nextnotfound = temp;
-          backup = search;
+        if (!traveled.includes(temp)) {
+          traveled.push(temp);
+          dists.push(depth + 1);
+          queue.push([temp, depth + 1]);
         }
       }
     }
-    // not found
-    if (found == false) {
-      console.log("repeat");
-      curr = backup;
-      startnode = nextnotfound;
-    } else {
-      curr = nextNode;
-      startnode = nextfound;
-    }
-    console.log("source", curr.source.id, "target", curr.target.id);
-    traveled[curr.source.id].push(curr.target.id);
-    traveled[curr.target.id].push(curr.source.id);
-    path.push(curr);
-    plength--;
   }
 
+  var all_dists = [];
+
+  for (var i = 0; i < dists.length; i++) {
+    all_dists.push([traveled[i], dists[i]]);
+  }
+
+  return all_dists;
 }
 
-var pathlength = Math.floor(p / 2);
-var path = getPath(pathlength, links);
+// Gets all paths with distance plength
+function all_bfs(nodes, links, plength) {
+  var paths = [];
+
+  for (var i = 0; i < nodes.length; i++) {
+    var all_dists = bfs(nodes[i], links);
+
+    for (var j = 0; j < all_dists.length; j++) {
+      if (all_dists[j][1] === plength) {
+        paths.push([nodes[i].id, all_dists[j][0]]);
+      }
+    }
+  }
+
+  return paths;
+}
+
+// Gets random web path of plength
+function get_path(nodes, links, plength) {
+  var all_paths = all_bfs(nodes, links, plength);
+  var rand_idx = Math.floor(Math.random() * (all_paths.length - 1));
+  var path = all_paths[rand_idx];
+  return [websites[path[0]], websites[path[1]]];
+}
 
 // Initialize D3 force layout
 var force = d3.layout.force()
@@ -206,9 +216,6 @@ function tick() {
     return 'translate(' + d.x + ',' + d.y + ')';
   });
 }
-
-
-website_iterator = 0;
 
 // Updates graph (called when needed)
 function restart() {
@@ -291,9 +298,7 @@ function restart() {
       .attr('y', 4)
       .attr('class', 'id')
       .text(function(d) {
-        //websites[Math.floor(Math.random() * (websites.length - 1))];
         currweb = websites[website_iterator];
-        //console.log(website_iterator, currweb);
         website_iterator++;
         return currweb
       });
