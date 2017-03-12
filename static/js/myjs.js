@@ -15,6 +15,9 @@ var p = 25;
 var n = 2 * p,
     m = 2 * p + 1;
 
+// Initializing path length
+var pl = p / 5;
+
 // Website names
 var website_iterator = 0;
 var websites = ['Google', 'Amazon', 'Facebook', 'Twitter', 'LinkedIn', 
@@ -25,7 +28,7 @@ var websites = ['Google', 'Amazon', 'Facebook', 'Twitter', 'LinkedIn',
                 'Live', 'Office', 'CNN', 'Chase', 'Blogspot',
                 'ESPN', 'Twitch', 'Apple', 'Walmart', 'Caltech',
                 'Weather', 'Breitbart', 'Microsoft', 'Zillow', 'Dropbox',
-                'Asana', 'New Yorker', 'Asos', 'Forever 21', 'Twitch',
+                'Asana', 'New Yorker', 'Asos', 'Twitch', 'Alibaba',
                 'BlueApron', 'Square', 'Uniqlo', 'Weibo', 'Baidu',
                 'Baidu', 'GitHub', 'PirateBay', 'Spotify', 'Vimeo',
                 'UPS', 'PornHub', 'NBC', 'CBS', 'Disney'];
@@ -141,8 +144,8 @@ function all_bfs(nodes, links, plength) {
 function get_path(nodes, links, plength) {
   var all_paths = all_bfs(nodes, links, plength);
   var rand_idx = Math.floor(Math.random() * (all_paths.length - 1));
-  var path = all_paths[rand_idx];
-  return [websites[path[0]], websites[path[1]]];
+  var rpath = all_paths[rand_idx];
+  return rpath;
 }
 
 // Initialize D3 force layout
@@ -181,7 +184,7 @@ var path = svg.append('svg:g').selectAll('path'),
     circle = svg.append('svg:g').selectAll('g');
 
 // Initializing mouse event variables
-var selected_node = null,
+var selected_node = nodes[0],
     selected_link = null,
     mousedown_link = null,
     mousedown_node = null,
@@ -217,6 +220,21 @@ function tick() {
   });
 }
 
+// Gets node by ID
+function get_node_by_id(id) {
+  for (var i = 0; i < nodes.length; i++) {
+    if (nodes[i].id === id) {
+      return nodes[i];
+    }
+  }
+}
+
+var rand_path = get_path(nodes, links, pl);
+var start = get_node_by_id(rand_path[0]);
+var visited = [start];
+selected_node = start;
+console.log(websites[start.id])
+
 // Updates graph (called when needed)
 function restart() {
   path = path.data(links);
@@ -244,7 +262,6 @@ function restart() {
   // Remove old links
   path.exit().remove();
 
-
   circle = circle.data(nodes, function(d) {return d.id;});
 
   // Update existing nodes (reflexive and selected visual states)
@@ -262,33 +279,32 @@ function restart() {
     .classed('reflexive', function(d) {return d.reflexive;})
     .on('mousedown', function(d) {
       if(d3.event.ctrlKey) return;
-      mousedown_node = d;
-      if(mousedown_node === selected_node) selected_node = null
-      else {
+      var mousedown_node = d;
+      if(mousedown_node === selected_node) {
+        selected_node.reflexive = true;
+        restart();
+      }
+      var adj = false;
+      for (var i = 0; i < links.length; i++) {
+        var search = links[i];
+        if (search.source === selected_node && search.target === mousedown_node) {
+            adj = true;
+        }
+        else if (search.source === mousedown_node && search.target === selected_node) {
+            adj = true;
+        }
+        else if (visited.includes(search.source) && search.target === mousedown_node) {
+            adj = true;
+        }
+        else if (search.source === mousedown_node && visited.includes(search.target)) {
+            adj = true;
+        }
+      }
+      if (adj) {
         selected_node = mousedown_node;
         selected_node.reflexive = true;
+        visited.push(selected_node);
       }
-      selected_link = null;
-      restart();
-    })
-    .on('mouseup', function(d) {
-      if(!mousedown_node) return;
-      mouseup_node = d;
-      if(mouseup_node === mousedown_node) {resetMouseVars(); return;}
-
-      // Add link to graph (update if exists)
-      var source = mousedown_node,
-          target = mouseup_node;
-
-      var link = links.filter(function(l) {
-        return (l.source === source && l.target === target);
-      })[0];
-
-      link = {source: source, target: target, left: false, right: false};
-      links.push(link);
-
-      selected_link = link;
-      selected_node = null;
       restart();
     });
 
@@ -309,6 +325,12 @@ function restart() {
   // Start graph
   force.start();
 }
+
+// Set up text box
+var start_node = document.getElementById("start");
+var fin_node = document.getElementById("fin");
+start_node.innerHTML = websites[rand_path[0]];
+fin_node.innerHTML = websites[rand_path[1]];
 
 function mousedown() {
   svg.classed('active', true);
