@@ -26,5 +26,17 @@ def gameover_consumer2():
 def gameover_company():
 	return render_template('gameover_company.html')
 
+@app.route('/gameover_company2')
+def gameover_company2():
+	return render_template('gameover_company2.html')
+
+@app.route('/company2')
+def company2():
+	return render_template('company2.html')
+
+@app.route('/consumer2')
+def consumer2():
+	return render_template('consumer2.html')
+
 if __name__ == '__main__':
 	app.run()

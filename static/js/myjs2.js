@@ -486,7 +486,13 @@ function restart() {
 			    writingLocation.set({
 				    sign: true, 
 				  });
-				  document.location.href = 'consumer2';
+				  var rand = Math.random();
+				  if (rand < 0.5) {
+			    document.location.href = 'gameover_company';
+			  	}
+			  	else {
+			  		document.location.href = 'gameover_company2';
+			  	}
 			  });
 				check_done();
 			}
