@@ -34,7 +34,7 @@ var websites = ['Google', 'Amazon', 'Facebook', 'Twitter', 'LinkedIn',
                 'UPS', 'PornHub', 'NBC', 'CBS', 'Disney'];
 // notifications on losing security information
 var info_iterator = 0;
-var information = ["the street you grew up on", "your mother's maiden name", 'your username',
+var information = ['the street you grew up on', "your mother's maiden name", 'your username',
                   'your password', 'your first name', 'your last name', 
                   'your gender', 'your ethnicity', 'your security answer', 
                   'your date of birth', 'your home phone', 'your cell phone number', 
