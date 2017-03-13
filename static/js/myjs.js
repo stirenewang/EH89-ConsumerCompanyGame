@@ -47,6 +47,21 @@ var n = 2 * p,
 // Initializing path length
 var pl = p / 5;
 
+// check what company says
+firebase.database().ref('test').once('value').then(function(snapshot) {
+  var done_val = snapshot.val().sign;
+  var result = snapshot.val().test;
+  console.log("beginning... reading company", done_val);
+  if (done_val == "-") {
+    pl = 3;
+  } else {
+    pl = 5;
+  }
+
+  console.log(pl);
+});
+
+
 // Website names
 var website_iterator = 0;
 var websites = ['Google', 'Amazon', 'Facebook', 'Twitter', 'LinkedIn', 

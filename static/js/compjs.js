@@ -21,6 +21,7 @@ var defaultDatabase = firebase.database();
 // Get a reference to the database service
 var database = firebase.database();
 var writingLocation = database.ref('test');
+var consumerLocation = database.ref('consumer');
 
 
 var pVal = 2;
