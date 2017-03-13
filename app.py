@@ -1,9 +1,6 @@
 from flask import Flask, render_template
-from flask_socketio import SocketIO
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'secret!'
-socketio = SocketIO(app)
 
 @app.route('/')
 def selection():
@@ -17,5 +14,13 @@ def company():
 def consumer():
 	return render_template('consumer.html')
 
+@app.route('/gameover_company')
+def gameover_company():
+	return render_template('gameover_company.html')
+
+@app.route('/gameover_consumer')
+def gameover_consumer():
+	return render_template('gameover_consumer.html')
+
 if __name__ == '__main__':
-	socketio.run(app)
+	app.run()
