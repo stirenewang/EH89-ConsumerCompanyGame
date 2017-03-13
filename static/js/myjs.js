@@ -8,6 +8,35 @@ var svg = d3.select('body')
   .attr('width', width)
   .attr('height', height);
 
+/* global firebase */
+
+'use strict';
+
+// Initialize Firebase
+var config = {
+apiKey: "AIzaSyANn_1CLa3iR_BzVLPekTQdbqgsNuJRBqQ",
+authDomain: "cc89-ba4c8.firebaseapp.com",
+databaseURL: "https://cc89-ba4c8.firebaseio.com",
+storageBucket: "cc89-ba4c8.appspot.com",
+messagingSenderId: "188355216056"
+};
+firebase.initializeApp(config);
+// Initialize the default app
+
+console.log(firebase.app().name);  // "[DEFAULT]"
+// Use the shorthand notation to retrieve the default app's services
+var defaultStorage = firebase.storage();
+var defaultDatabase = firebase.database();
+
+// Get a reference to the database service
+var database = firebase.database();
+var writingLocation = database.ref('consumer');
+var companyLocation = database.ref('test');
+
+writingLocation.set({
+  sign: "null", 
+});
+
 // Initializing number of nodes/edges
 // n = number of nodes
 // m = number of edges
@@ -161,6 +190,15 @@ function get_path(nodes, links, plength) {
   return rpath;
 }
 
+function check_done() {
+  firebase.database().ref('test').once('value').then(function(snapshot) {
+    var done_val = snapshot.val().sign;
+    var result = snapshot.val().test;
+    console.log("company p", result);
+    console.log("company val", done_val);
+  });
+}
+
 // Initialize D3 force layout
 var force = d3.layout.force()
   .nodes(nodes)
@@ -300,6 +338,11 @@ function restart() {
       }
       if (mousedown_node === fin) {
         done = true;
+        writingLocation.set({
+          sign: "true", 
+          // info: website_iterator,
+        });
+        check_done();
       }
       var adj = false;
       for (var i = 0; i < links.length; i++) {
