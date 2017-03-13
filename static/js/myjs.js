@@ -35,10 +35,14 @@ var websites = ['Google', 'Amazon', 'Facebook', 'Twitter', 'LinkedIn',
 // notifications on losing security information
 var info_iterator = 0;
 var information = ["the street you grew up on", "your mother's maiden name", 'your username',
-                  'your password', 'your security answer', 'your birthday', 
-                  'your home phone', 'your cell phone number', 'your address', 
-                  'credit card number', 'csv', 'debit card number', 
-                  'SSN'];
+                  'your password', 'your first name', 'your last name', 
+                  'your gender', 'your ethnicity', 'your security answer', 
+                  'your date of birth', 'your home phone', 'your cell phone number', 
+                  'your address', 'your credit card number', 'your csv', 
+                  'your location', 'the websites you visit', 'the ads you click', 
+                  'your device information', 'your IP address', 'your cookie data',
+                  'the videos you watch', 'the websites you visit', 'your debit card number', 
+                  'your SSN', 'all your user data'];
 
 // Pushing the nodes
 nodes = [
@@ -307,8 +311,10 @@ function restart() {
         }
       }
       if (adj) {
+        curr_info = information[info_iterator];
+        info_iterator++;
         // Notification of loss of info
-        $.notify("Warning: You lost information", 
+        $.notify("Warning: The company now knows " + curr_info, 
           {position: "right bottom", 
           className: 'warn'});
 
