@@ -41,12 +41,6 @@
 
     <!-- D3 JavaScript -->
     <script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
-
-    <!-- My Javascript -->
-    <script src="static/js/myjs.js"></script>
-
-    <!-- My CSS -->
-    <link href="static/mycss.css" rel="stylesheet" type="text/css">
 </head>
 
 <body id="page-top" data-spy="scroll" data-target=".navbar-fixed-top">
@@ -65,18 +59,22 @@
     <div style="position:fixed; top:30%; left:30%">
       Case Study
     </div>
-
+    <div id="p" style="position: fixed;top:35%; left:30%">2</div>
+    
     <div style="position:fixed; top:70%; left:44%">
-        <a href="#"> <!-- Needs to add p -->
+        <a href="#" id="add"> <!-- Needs to add p -->
             <span class="glyphicon glyphicon-plus w3-jumbo"></span>
         </a>
-        <a href="#"> <!-- Needs to minus p -->
+        <a href="#" id="sub"> <!-- Needs to minus p -->
             <span class="glyphicon glyphicon-minus w3-jumbo"></span>
         </a>
     </div>
 </body>
 
+<!-- Firebase database -->
+<script src="https://www.gstatic.com/firebasejs/3.7.0/firebase.js"></script>
+
 <!-- My Javascript -->
-<script src="static/js/myjs.js"></script>
+<script src="static/js/compjs.js"></script>
 
 </html>
