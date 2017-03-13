@@ -47,22 +47,30 @@ var n = 2 * p,
 // Initializing path length
 var pl = 4;
 updatepl();
-function updatepl(){
-  // check what company says
-  firebase.database().ref('test').once('value').then(function(snapshot) {
-    var done_val = snapshot.val().sign;
-    var result = snapshot.val().test;
-    console.log("beginning... reading company", done_val);
-    if (done_val == "-") {
-      pl = 3;
-    } else if (done_val == "+"){
-      pl = 5;
-    }
 
-    console.log(pl);
-  });
+function updatepl() {
+  // check what company says
+  var test = firebase.database().ref('test').once('value').then(function(snapshot) {
+      var done_val = snapshot.val().sign;
+      var result = snapshot.val().test;
+      console.log("beginning... reading company", done_val);
+
+      if (done_val == "-") {
+        pl = 3;
+      } else if (done_val == "+"){
+        pl = 5;
+      } else {
+        pl = 4;
+      }
+      document.getElementById("secret").innerHTML = pl;
+      console.log(pl);
+
+      document.getElementById("secret").onchange();
+      console.log("trigger a change");
+    });
 }
-console.log("actual pl",pl);
+
+
 // Website names
 var website_iterator = 0;
 var websites = ['Google', 'Amazon', 'Facebook', 'Twitter', 'LinkedIn', 
@@ -204,6 +212,40 @@ function get_path(nodes, links, plength) {
   return rpath;
 }
 
+/// DANGER
+var trythis = 0;
+document.getElementById("secret").onchange = function() {
+  console.log("new secret", document.getElementById("secret").innerHTML);
+  trythis = document.getElementById("secret").innerHTML;
+
+};
+var rand_path, start, fin, visited;
+testsecret();
+function testsecret() {
+  if (trythis == 0) {
+    console.log("test secret still 0");
+    window.setTimeout(testsecret, 200);
+  } else {
+    console.log("test secret is", trythis);
+    pl = trythis;
+    rand_path = get_path(nodes, links, pl);
+    console.log("randpth", rand_path);
+    start = get_node_by_id(rand_path[0]);
+    fin = get_node_by_id(rand_path[1]);
+    start.reflexive = true;
+    visited = [start];
+    selected_node = start;
+  }
+}
+
+rand_path = get_path(nodes, links, pl);
+start = get_node_by_id(rand_path[0]);
+fin = get_node_by_id(rand_path[1]);
+start.reflexive = true;
+visited = [start];
+selected_node = start;
+
+
 function check_done() {
   firebase.database().ref('test').once('value').then(function(snapshot) {
     var done_val = snapshot.val().sign;
@@ -223,14 +265,15 @@ function check_done() {
     // company is done
     console.log("company is done and so are you!");
     location.reload();
-    firebase.database().ref('test').once('value').then(function(snapshot) {
-      console.log("reseting company...");
-      var result = snapshot.val().test;
-      writingLocation.set({
-        test: result,
-        sign: "null", 
-      });
-    });
+    console.log("testing after load", pl);
+    // firebase.database().ref('test').once('value').then(function(snapshot) {
+    //   console.log("reseting company...");
+    //   var result = snapshot.val().test;
+    //   writingLocation.set({
+    //     test: result,
+    //     sign: "null", 
+    //   });
+    // });
   }
 
 }
@@ -316,12 +359,6 @@ function get_node_by_id(id) {
   }
 }
 
-var rand_path = get_path(nodes, links, pl);
-var start = get_node_by_id(rand_path[0]);
-var fin = get_node_by_id(rand_path[1]);
-start.reflexive = true;
-var visited = [start];
-selected_node = start;
 var done = false;
 
 // Updates graph (called when needed)
