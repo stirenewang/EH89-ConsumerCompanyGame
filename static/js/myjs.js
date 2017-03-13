@@ -1,3 +1,5 @@
+/* global firebase */
+
 // Setting up SVG
 var width  = 1000,
     height = 1000,
@@ -8,9 +10,7 @@ var svg = d3.select('body')
   .attr('width', width)
   .attr('height', height);
 
-/* global firebase */
 
-'use strict';
 
 // Initialize Firebase
 var config = {
@@ -74,7 +74,7 @@ var information = ['the street you grew up on', "your mother's maiden name", 'yo
                   'your SSN', 'all your user data'];
 
 // Pushing the nodes
-nodes = [
+var nodes = [
   {id: 0, reflexive: false}
 ]
 for(var i = 1; i < n; i++) {
@@ -91,8 +91,8 @@ function createLink(nodes, k) {
   }
 
   for (var i = 0; i < k; i++) {
-    idx1 = Math.floor(Math.random() * (n - 1));
-    idx2 = Math.floor(Math.random() * (n - 1));
+    var idx1 = Math.floor(Math.random() * (n - 1));
+    var idx2 = Math.floor(Math.random() * (n - 1));
 
     while (idx2 == idx1) {
       idx2 = Math.floor(Math.random() * (n - 1));
@@ -110,7 +110,7 @@ function createLink(nodes, k) {
     existing[idx1].push(idx2);
     existing[idx2].push(idx1);
 
-    entry = {source: nodes[idx1], target: nodes[idx2], left: false, right: false}
+    var entry = {source: nodes[idx1], target: nodes[idx2], left: false, right: false}
     linklist.push(entry);
   }
 
@@ -194,7 +194,20 @@ function check_done() {
     var result = snapshot.val().test;
     console.log("company p", result);
     console.log("company val", done_val);
+    if (done_val == "+" || done_val == "-") {
+      done = true;
+    } else { done = false;}
   });
+  console.log("checking if done?", done);
+  // company is not done
+  if (done == false) {
+    console.log("Checking if done...")
+    window.setTimeout(check_done, 1000);
+  } else {
+    // company is done
+    console.log("company is done and so are you!");
+  }
+
 }
 
 // Initialize D3 force layout
@@ -281,6 +294,7 @@ function get_node_by_id(id) {
 var rand_path = get_path(nodes, links, pl);
 var start = get_node_by_id(rand_path[0]);
 var fin = get_node_by_id(rand_path[1]);
+start.reflexive = true;
 var visited = [start];
 selected_node = start;
 var done = false;
@@ -335,7 +349,6 @@ function restart() {
         restart();
       }
       if (mousedown_node === fin) {
-        done = true;
         writingLocation.set({
           sign: "true", 
           // info: website_iterator,
