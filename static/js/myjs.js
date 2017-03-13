@@ -45,7 +45,7 @@ var n = 2 * p,
     m = 2 * p + 1;
 
 // Initializing path length
-var pl = 4;
+var pl = p / 5;
 
 // Website names
 var website_iterator = 0;
@@ -61,19 +61,17 @@ var websites = ['Google', 'Amazon', 'Facebook', 'Twitter', 'LinkedIn',
                 'BlueApron', 'Square', 'Uniqlo', 'Weibo', 'Baidu',
                 'Baidu', 'GitHub', 'PirateBay', 'Spotify', 'Vimeo',
                 'UPS', 'PornHub', 'NBC', 'CBS', 'Disney'];
-// Notifications on losing security information
+// notifications on losing security information
 var info_iterator = 0;
-var information = ['the street you grew up on', "your mother's maiden name",
-                   'your username', 'your first name',
-                   'your last name', 'your gender',
-                   'your ethnicity', 'your security answer',
-                   'your date of birth', 'your home phone number',
-                   'your cell phone number', 'your address',
-                   'your credit card number', 'your csv',
-                   'your location', 'your browsing history',
-                   'the ads you click', 'your IP address',
-                   'the videos you watch', 'your debit card number',
-                   'your SSN', 'all your user data'];
+var information = ['the street you grew up on', "your mother's maiden name", 'your username',
+                  'your password', 'your first name', 'your last name', 
+                  'your gender', 'your ethnicity', 'your security answer', 
+                  'your date of birth', 'your home phone', 'your cell phone number', 
+                  'your address', 'your credit card number', 'your csv', 
+                  'your location', 'the websites you visit', 'the ads you click', 
+                  'your device information', 'your IP address', 'your cookie data',
+                  'the videos you watch', 'the websites you visit', 'your debit card number', 
+                  'your SSN', 'all your user data'];
 
 // Pushing the nodes
 var nodes = [
