@@ -22,10 +22,10 @@ var defaultDatabase = firebase.database();
 var database = firebase.database();
 var writingLocation = database.ref('test');
 
+
 var pVal = 2;
 // console.log(document.getElementById("add"));
 retrieve();
-
 document.getElementById("add").addEventListener("click", function() {
   console.log("adding 1 to ", pVal);
   pVal += 1;
@@ -59,6 +59,11 @@ function retrieve() {
     console.log("testing p", document.getElementById("p").innerHTML);
     pVal = result;
     console.log("new p: " , pVal);
+    writingLocation.set({
+      test: pVal,
+      sign: "null", 
+    });
+
   });
 }
 
