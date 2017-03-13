@@ -45,12 +45,10 @@ var n = 2 * p,
 		m = 2 * p + 1;
 
 // Initializing path length
-var pl = 4;
-updatepl();
+var pl = 5;
+// updatepl();
 
-function updatepl() {
-  // check what company says
-  var test = firebase.database().ref('test').once('value').then(function(snapshot) {
+firebase.database().ref('test').once('value').then(function(snapshot) {
       var done_val = snapshot.val().sign;
       var result = snapshot.val().test;
       console.log("beginning... reading company", done_val);
@@ -62,28 +60,45 @@ function updatepl() {
       } else {
         pl = 4;
       }
-      document.getElementById("secret").innerHTML = pl;
-      console.log(pl);
+     });
 
-// updatepl();
+// function updatepl() {
+//   // check what company says
+//   var test = firebase.database().ref('test').once('value').then(function(snapshot) {
+//       var done_val = snapshot.val().sign;
+//       var result = snapshot.val().test;
+//       console.log("beginning... reading company", done_val);
 
-function updatepl(){
-  // check what company says
-  firebase.database().ref('test').once('value').then(function(snapshot) {
-    var done_val = snapshot.val().sign;
-    var result = snapshot.val().test;
-    console.log("beginning... reading company", done_val);
-    if (done_val == "-") {
-      pl = 3;
-    } else if (done_val == "+"){
-      pl = 5;
-    } else {
-    	pl = 4;
-    }
-      document.getElementById("secret").onchange();
-      console.log("trigger a change");
-    });
-}
+//       if (done_val == "-") {
+//         pl = 3;
+//       } else if (done_val == "+"){
+//         pl = 5;
+//       } else {
+//         pl = 4;
+//       }
+//       document.getElementById("secret").innerHTML = pl;
+//       console.log(pl);
+
+// // updatepl();
+
+// function updatepl(){
+//   // check what company says
+//   firebase.database().ref('test').once('value').then(function(snapshot) {
+//     var done_val = snapshot.val().sign;
+//     var result = snapshot.val().test;
+//     console.log("beginning... reading company", done_val);
+//     if (done_val == "-") {
+//       pl = 3;
+//       document.getElementById("secret").innerHTML = pl;
+//     } else if (done_val == "+"){
+//       pl = 5;
+//     } else {
+//     	pl = 4;
+//     }
+//     document.getElementById("secret").innerHTML = pl;
+//     console.log("trigger a change");
+//     });
+// }
 
 console.log("actual pl",pl);
 // Website names
@@ -228,37 +243,37 @@ function get_path(nodes, links, plength) {
 }
 
 /// DANGER
-var trythis = 0;
-document.getElementById("secret").onchange = function() {
-  console.log("new secret", document.getElementById("secret").innerHTML);
-  trythis = document.getElementById("secret").innerHTML;
+// var trythis = 0;
+// document.getElementById("secret").onchange = function() {
+//   console.log("new secret", document.getElementById("secret").innerHTML);
+//   trythis = document.getElementById("secret").innerHTML;
 
-};
-var rand_path, start, fin, visited;
-testsecret();
-function testsecret() {
-  if (trythis == 0) {
-    console.log("test secret still 0");
-    window.setTimeout(testsecret, 200);
-  } else {
-    console.log("test secret is", trythis);
-    pl = trythis;
-    rand_path = get_path(nodes, links, pl);
-    console.log("randpth", rand_path);
-    start = get_node_by_id(rand_path[0]);
-    fin = get_node_by_id(rand_path[1]);
-    start.reflexive = true;
-    visited = [start];
-    selected_node = start;
-  }
-}
+// };
+// var rand_path, start, fin, visited;
+// testsecret();
+// function testsecret() {
+//   if (trythis == 0) {
+//     console.log("test secret still 0");
+//     window.setTimeout(testsecret, 200);
+//   } else {
+//     console.log("test secret is", trythis);
+//     pl = trythis;
+//     rand_path = get_path(nodes, links, pl);
+//     console.log("randpth", rand_path);
+//     start = get_node_by_id(rand_path[0]);
+//     fin = get_node_by_id(rand_path[1]);
+//     start.reflexive = true;
+//     visited = [start];
+//     selected_node = start;
+//   }
+// }
 
-rand_path = get_path(nodes, links, pl);
-start = get_node_by_id(rand_path[0]);
-fin = get_node_by_id(rand_path[1]);
-start.reflexive = true;
-visited = [start];
-selected_node = start;
+// rand_path = get_path(nodes, links, pl);
+// start = get_node_by_id(rand_path[0]);
+// fin = get_node_by_id(rand_path[1]);
+// start.reflexive = true;
+// visited = [start];
+// selected_node = start;
 
 
 function check_done() {
@@ -467,9 +482,11 @@ function restart() {
 			if (mousedown_node === fin) {
 				selected_node.reflexive = true;
 				firebase.database().ref('consumer').once('value').then(function(snapshot) {
+					console.log(fin)
 			    writingLocation.set({
-			      sign: "true", 
-			    });
+				    sign: true, 
+				  });
+			    document.location.href = 'gameover_company'
 			  });
 				check_done();
 			}
