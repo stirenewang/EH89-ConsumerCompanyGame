@@ -242,8 +242,10 @@ function get_node_by_id(id) {
 
 var rand_path = get_path(nodes, links, pl);
 var start = get_node_by_id(rand_path[0]);
+var fin = get_node_by_id(rand_path[1]);
 var visited = [start];
 selected_node = start;
+var done = false;
 
 // Updates graph (called when needed)
 function restart() {
@@ -288,11 +290,14 @@ function restart() {
     .style('stroke', function(d) {return d3.rgb(colors(d.id)).darker().toString();})
     .classed('reflexive', function(d) {return d.reflexive;})
     .on('mousedown', function(d) {
-      if(d3.event.ctrlKey) return;
+      if (d3.event.ctrlKey) return;
       var mousedown_node = d;
-      if(mousedown_node === selected_node) {
+      if (mousedown_node === selected_node) {
         selected_node.reflexive = true;
         restart();
+      }
+      if (mousedown_node === fin) {
+        done = true;
       }
       var adj = false;
       for (var i = 0; i < links.length; i++) {
@@ -313,7 +318,6 @@ function restart() {
       if (adj) {
         curr_info = information[info_iterator];
         info_iterator++;
-        // Notification of loss of info
         $.notify("Warning: The company now knows " + curr_info, 
           {position: "right bottom", 
           className: 'warn'});
