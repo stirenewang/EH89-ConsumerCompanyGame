@@ -30,14 +30,14 @@ document.getElementById("add").addEventListener("click", function() {
   console.log("adding 1 to ", pVal);
   pVal += 1;
   document.getElementById("p").innerHTML = pVal;
-  writeUserData(pVal);
+  writeUserData(pVal, "+");
 });
 
 document.getElementById("sub").addEventListener("click", function() {
   console.log("subtracting 1 from ", pVal);
   pVal -= 1;
   document.getElementById("p").innerHTML = pVal;
-  writeUserData(pVal);
+  writeUserData(pVal, "-");
 });
 
 /* If retrieve is pressed, firebase will look up value in 'test' once 
@@ -59,13 +59,14 @@ function retrieve() {
     console.log("testing p", document.getElementById("p").innerHTML);
     pVal = result;
     console.log("new p: " , pVal);
-
   });
 }
+
 /* Write the new pvalue (test) to firebase */
-function writeUserData(test) {
+function writeUserData(test, sign) {
   console.log("writing");
   writingLocation.set({
     test: test,
+    sign: sign, 
   });
 }
