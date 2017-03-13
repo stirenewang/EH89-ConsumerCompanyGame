@@ -32,7 +32,8 @@ var websites = ['Google', 'Amazon', 'Facebook', 'Twitter', 'LinkedIn',
                 'BlueApron', 'Square', 'Uniqlo', 'Weibo', 'Baidu',
                 'Baidu', 'GitHub', 'PirateBay', 'Spotify', 'Vimeo',
                 'UPS', 'PornHub', 'NBC', 'CBS', 'Disney'];
-
+// notifications on losing security information
+var information = [''];
 // Pushing the nodes
 nodes = [
   {id: 0, reflexive: false}
@@ -300,6 +301,11 @@ function restart() {
         }
       }
       if (adj) {
+        // Notification of loss of info
+        $.notify("Warning: You lost information", 
+          {position: "right bottom", 
+          className: 'warn'});
+        
         selected_node = mousedown_node;
         selected_node.reflexive = true;
         visited.push(selected_node);
