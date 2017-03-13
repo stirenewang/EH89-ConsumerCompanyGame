@@ -46,26 +46,28 @@ var n = 2 * p,
 
 // Initializing path length
 var pl = 4;
-var done = false;
 
-// check what company says
-firebase.database().ref('test').once('value').then(function(snapshot) {
-	var done_val = snapshot.val().sign;
-	var result = snapshot.val().test;
-	var pl_real = 0;
-	console.log("beginning... reading company", done_val);
-	if (done_val == "-") {
-		pl_real = 3;
-	} else if (done_val == "+"){
-		pl_real = 5;
-	}
+// updatepl();
 
-	console.log(pl_real);
-});
+function updatepl(){
+  // check what company says
+  firebase.database().ref('test').once('value').then(function(snapshot) {
+    var done_val = snapshot.val().sign;
+    var result = snapshot.val().test;
+    console.log("beginning... reading company", done_val);
+    if (done_val == "-") {
+      pl = 3;
+    } else if (done_val == "+"){
+      pl = 5;
+    } else {
+    	pl = 4;
+    }
 
-pl = uh();
-console.log(pl)
+    console.log(pl);
+  });
+}
 
+console.log("actual pl",pl);
 
 // Website names
 var website_iterator = 0;
@@ -202,10 +204,10 @@ function all_bfs(nodes, links, plength) {
 
 // Gets random web path of plength
 function get_path(nodes, links, plength) {
-	var all_paths = all_bfs(nodes, links, plength);
-	var rand_idx = Math.floor(Math.random() * (all_paths.length - 1));
-	var rpath = all_paths[rand_idx];
-	return rpath;
+  var all_paths = all_bfs(nodes, links, plength);
+  var rand_idx = Math.floor(Math.random() * (all_paths.length - 1));
+  var rpath = all_paths[rand_idx];
+  return rpath;
 }
 
 // Initialize D3 force layout
@@ -288,6 +290,8 @@ function get_node_by_id(id) {
 		}
 	}
 }
+
+var done = false;
 
 function check_done() {
 	firebase.database().ref('test').once('value').then(function(snapshot) {
@@ -377,10 +381,12 @@ function restart() {
 				restart();
 			}
 			if (mousedown_node === fin) {
-				writingLocation.set({
-					sign: "true", 
-					// info: website_iterator,
-				});
+				selected_node.reflexive = true;
+				firebase.database().ref('consumer').once('value').then(function(snapshot) {
+			    writingLocation.set({
+			      sign: "true", 
+			    });
+			  });
 				check_done();
 			}
 			var adj = false;
