@@ -34,7 +34,7 @@ var websites = ['Google', 'Amazon', 'Facebook', 'Twitter', 'LinkedIn',
                 'UPS', 'PornHub', 'NBC', 'CBS', 'Disney'];
 // notifications on losing security information
 var info_iterator = 0;
-var information = ["the street you grew up on", "your mother's maiden name", 'your username',
+var information = ['the street you grew up on', "your mother's maiden name", 'your username',
                   'your password', 'your first name', 'your last name', 
                   'your gender', 'your ethnicity', 'your security answer', 
                   'your date of birth', 'your home phone', 'your cell phone number', 
@@ -346,8 +346,8 @@ function restart() {
 // Set up text box
 var start_node = document.getElementById("start");
 var fin_node = document.getElementById("fin");
-start_node.innerHTML = 'Start at ' + websites[rand_path[0]];
-fin_node.innerHTML = 'End at ' + websites[rand_path[1]];
+start_node.innerHTML = websites[rand_path[0]] + '.';
+fin_node.innerHTML = websites[rand_path[1]] + '.';
 
 function mousedown() {
   svg.classed('active', true);
