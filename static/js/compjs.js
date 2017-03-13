@@ -23,6 +23,21 @@ var database = firebase.database();
 var writingLocation = database.ref('test');
 var consumerLocation = database.ref('consumer');
 
+function check_done() {
+    // check what company says
+  firebase.database().ref('consumer').once('value').then(function(snapshot) {
+    var done_val = snapshot.val().sign;
+    console.log("beginning... reading consumer", done_val);
+    if (done_val == "true") {
+      // consumer is done
+      console.log("you and company r done l ma o");
+      // writeUserData(pVal, "null");
+      location.reload();
+    } else {
+      window.setTimeout(check_done, 1000);
+    }
+  });
+}
 
 var pVal = 2;
 // console.log(document.getElementById("add"));
@@ -32,6 +47,7 @@ document.getElementById("add").addEventListener("click", function() {
   pVal += 1;
   document.getElementById("p").innerHTML = pVal;
   writeUserData(pVal, "+");
+  check_done();
 });
 
 document.getElementById("sub").addEventListener("click", function() {
@@ -39,6 +55,7 @@ document.getElementById("sub").addEventListener("click", function() {
   pVal -= 1;
   document.getElementById("p").innerHTML = pVal;
   writeUserData(pVal, "-");
+  check_done();
 });
 
 /* If retrieve is pressed, firebase will look up value in 'test' once 
@@ -64,7 +81,6 @@ function retrieve() {
       test: pVal,
       sign: "null", 
     });
-
   });
 }
 

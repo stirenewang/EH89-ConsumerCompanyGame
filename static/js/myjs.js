@@ -45,23 +45,24 @@ var n = 2 * p,
     m = 2 * p + 1;
 
 // Initializing path length
-var pl = p / 5;
+var pl = 4;
+updatepl();
+function updatepl(){
+  // check what company says
+  firebase.database().ref('test').once('value').then(function(snapshot) {
+    var done_val = snapshot.val().sign;
+    var result = snapshot.val().test;
+    console.log("beginning... reading company", done_val);
+    if (done_val == "-") {
+      pl = 3;
+    } else if (done_val == "+"){
+      pl = 5;
+    }
 
-// check what company says
-firebase.database().ref('test').once('value').then(function(snapshot) {
-  var done_val = snapshot.val().sign;
-  var result = snapshot.val().test;
-  console.log("beginning... reading company", done_val);
-  if (done_val == "-") {
-    pl = 3;
-  } else {
-    pl = 5;
-  }
-
-  console.log(pl);
-});
-
-
+    console.log(pl);
+  });
+}
+console.log("actual pl",pl);
 // Website names
 var website_iterator = 0;
 var websites = ['Google', 'Amazon', 'Facebook', 'Twitter', 'LinkedIn', 
@@ -221,6 +222,15 @@ function check_done() {
   } else {
     // company is done
     console.log("company is done and so are you!");
+    location.reload();
+    firebase.database().ref('test').once('value').then(function(snapshot) {
+      console.log("reseting company...");
+      var result = snapshot.val().test;
+      writingLocation.set({
+        test: result,
+        sign: "null", 
+      });
+    });
   }
 
 }
